@@ -51,7 +51,7 @@ function extract(target) {
             const stats = fs.statSync(filePath);
             if (stats.isDirectory()) {
                 processDirectory(filePath);
-            } else if (stats.isFile()) {
+            } else if (stats.isFile() && path.extname(filePath) === ".vue") {
                 processFile(filePath);
             }
         });
@@ -61,10 +61,8 @@ function extract(target) {
 
     if (stats.isDirectory()) {
         processDirectory(target);
-    } else if (stats.isFile()) {
+    } else if (stats.isFile() && path.extname(target) === ".vue") {
         processFile(target);
-    } else {
-        console.error("Invalid target. Must be a file or directory.");
     }
 
     return Array.from(words);
