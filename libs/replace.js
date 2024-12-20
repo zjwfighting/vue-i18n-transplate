@@ -34,10 +34,8 @@ function replaceChinese(target, options) {
             const filePath = path.join(target, file);
             replaceChinese(filePath, options); // Recursively process subdirectories
         });
-    } else if (stats.isFile()) {
+    } else if (stats.isFile() && path.extname(target) === ".vue") {
         processFile(target);
-    } else {
-        console.error("Invalid target. Must be a file or directory.");
     }
 }
 
