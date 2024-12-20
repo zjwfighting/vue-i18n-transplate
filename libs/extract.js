@@ -49,6 +49,7 @@ function extract(target) {
         files.forEach(file => {
             const filePath = path.join(dirPath, file);
             const stats = fs.statSync(filePath);
+            console.log("exact:", filePath)
             if (stats.isDirectory()) {
                 processDirectory(filePath);
             } else if (stats.isFile() && path.extname(filePath) === ".vue") {
@@ -59,6 +60,7 @@ function extract(target) {
 
     const stats = fs.statSync(target);
 
+    console.log("exact:", target)
     if (stats.isDirectory()) {
         processDirectory(target);
     } else if (stats.isFile() && path.extname(target) === ".vue") {
