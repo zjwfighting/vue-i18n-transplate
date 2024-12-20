@@ -12,8 +12,8 @@ const generateKey = (enWords) => {
         .join('');
 };
 
-const buildLanguagePacks = async (zhWords, api) => {
-    const enWords = await translate(zhWords, api);
+const buildLanguagePacks = async (zhWords, apikey) => {
+    const enWords = await translate(zhWords, apikey);
     const zh = {};
     const en = {};
     const map = {};
@@ -31,18 +31,18 @@ const buildLanguagePacks = async (zhWords, api) => {
 };
 
 async function process(options = {}) {
-    const { dir, module = "module", api } = options;
+    const { dir, module = "module", apikey } = options;
 
     if (!dir) throw new Error("dir是扫描目录，必填参数")
 
     try {
         const zhWords = extract(dir);
-        const { zh, en, map } = await buildLanguagePacks(zhWords, api);
+        const { zh, en, map } = await buildLanguagePacks(zhWords, apikey);
 
         replace(dir, { module, lang: map });
 
-        fs.writeFileSync(`module.json`, JSON.stringify({ zh, en, map }));
-        console.log(`文件已写入: ${output}`);
+        fs.writeFileSync(`${module}.json`, JSON.stringify({ zh, en, map }));
+        console.log(`文件已写入: ${module}.json`);
     } catch (error) {
         console.error('处理失败：', error); // Use console.error for errors
     }
