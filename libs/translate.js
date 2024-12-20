@@ -15,11 +15,11 @@ async function _translate(word, apikey) {
 }
 
 // 翻译
-async function translate(words = [], api, apikey) {
+async function translate(words = [], apikey) {
     const MAX_TOKENS = 2000;
     let wordsQueue = [], translatedQueue = [];
 
-    const translateFn = typeof api === 'function' ? api : (word) => _translate(word, apikey)
+    const translateFn = (word) => _translate(word, apikey)
 
     try {
         for (let word of words) {
