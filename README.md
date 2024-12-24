@@ -10,7 +10,7 @@
 
 * 扫描指定目录下的 Vue 文件、JavaScript 文件以及其他支持的文件类型。
 * 提取文件中的中文文本。
-* 将提取的中文文本替换为 i18n 路径 (例如 `$t('message.hello')`)。
+* 将提取的中文文本替换为 i18n 路径 (例如 `<span>你好</span>  --->  <span>$t('module.hello')</span>`)。
 * 动态调用翻译接口，获取对应语言的翻译文本，并将翻译结果添加到 i18n 资源文件中。
 * 支持自定义 i18n 路径生成规则。
 
@@ -29,9 +29,9 @@ const I18nTranslate = require('vue-i18n-translate');
 // 配置选项
 const options = {
   dir: './src/components', //必填 扫描的目录
-  module: 'test', //必填 模块名称 
-  apikey: "368f5036ec4c88c2afb9a0705d53c384", // 必填：小牛翻译的apikey，单日赠送200000字符翻译额度，可以自己去官网申请
-};
+  module: 'module', //选填 导出文件名称，i18n路径前缀， 默认为module 
+  apikey: "368f5036ec4c88c2afb9a0705d53c384", //必填：小牛翻译的apikey，单日赠送200000字符翻译额度，可以自己去官网申请
+}
 
 // 开始执行
 I18nTranslate.process(options);

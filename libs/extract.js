@@ -15,7 +15,15 @@ function _extract(template) {
                     if (prop.value) {
                         const attrValue = prop.value.content;
                         if (attrValue && chineseRegex.test(attrValue)) {
-                            chineseTexts.push(attrValue);
+                            chineseTexts.push({ type: "PROP",  value: attrValue});
+                        }
+                    }
+
+                    if(prop.exp) {
+                        const attrValue = prop.exp.content;
+                        if (attrValue && /[\u4e00-\u9fa5]/g.test(attrValue)) {
+                            const matches = attrValue.match(/[\u4e00-\u9fa5]+/g) || [];
+                            chineseTexts.push(...matches.map(item => ({ type: "PROP_COMPLEX", value: item })))
                         }
                     }
                 }
@@ -28,7 +36,13 @@ function _extract(template) {
             }
         } else if (node.type === 2 /* NodeTypes.TEXT */) {
             if (node.content && chineseRegex.test(node.content)) {
-                chineseTexts.push(node.content);
+                chineseTexts.push({type: "TAG", value: node.content});
+            }
+        } else if (node.type === 5 /* NodeTypes.{{ variable }} */) {
+            const content = node.content? node.content.content: "";
+            if (content && /[\u4e00-\u9fa5]/g.test(content)) {
+                const matches = content.match(/[\u4e00-\u9fa5]+/g) || [];
+                chineseTexts.push(...matches.map(item => ({ type: "TAG_COMPLEX", value: item })));
             }
         }
     }
@@ -36,12 +50,13 @@ function _extract(template) {
     traverse(ast.children[0]);
     return chineseTexts;
 }
+
 function extract(target) {
-    const words = new Set();
+    const words = [];
 
     function processFile(filePath) {
         let batch = _extract(fs.readFileSync(filePath, 'utf-8'));
-        batch.forEach(word => words.add(word.trim()));
+        batch.forEach(word => words.push({ ...word, value: word.value.trim()}));
     }
 
     function processDirectory(dirPath) {
@@ -67,7 +82,7 @@ function extract(target) {
         processFile(target);
     }
 
-    return Array.from(words);
+    return words;
 }
 
 module.exports = extract

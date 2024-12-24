@@ -13,18 +13,19 @@ const generateKey = (enWords) => {
 };
 
 const buildLanguagePacks = async (zhWords, apikey) => {
-    const enWords = await translate(zhWords, apikey);
+    const enWords = await translate(zhWords.map(item => item.value), apikey);
     const zh = {};
     const en = {};
     const map = {};
 
     zhWords.forEach((zhWord, index) => {
+        const { value, type } = zhWord;
         const enWord = enWords[index] || "";
-        const key = generateKey(enWord) || zhWord;
+        const key = generateKey(enWord) || value;
 
-        zh[key] = zhWord;
+        zh[key] = value;
         en[key] = enWord;
-        map[zhWord] = key;
+        map[value] = { key, type };
     });
 
     return { zh, en, map };
@@ -33,7 +34,7 @@ const buildLanguagePacks = async (zhWords, apikey) => {
 async function process(options = {}) {
     const { dir, module = "module", apikey } = options;
 
-    if (!dir) throw new Error("dir是扫描目录，必填参数")
+    if (!dir) throw new Error("dir, apikey是必填参数")
 
     try {
         const zhWords = extract(dir);
@@ -44,9 +45,8 @@ async function process(options = {}) {
         fs.writeFileSync(`${module}.json`, JSON.stringify({ zh, en, map }));
         console.log(`文件已写入: ${module}.json`);
     } catch (error) {
-        console.error('处理失败：', error); // Use console.error for errors
+        console.error('处理失败：', error);
     }
 }
-
 
 module.exports = { process, translate, extract, replace };
