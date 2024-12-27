@@ -44,6 +44,20 @@ function replaceChinese(target, options) {
                     return ` ${attr.charAt(0) === ':' ? attr : ':' + attr}="$t('${module}.${key}')"`
                 });
             }
+
+            if (type === "STRING_LITERAL") {
+                const regex = new RegExp(`(<script>[\\W\\w]*)(["']${chinese}['"])([\\W\\w]*<\/script>)`, 'g');
+                content = content.replace(regex, (_, m1, _m2, m3) => {
+                    return `${m1}this.$t("${module}.${key}")${m3}`
+                });
+            }
+
+            if (type === "TEMPLATE_LITERAL") {
+                const regex = new RegExp(`(<script>[\\W\\w]*)(${chinese})([\\W\\w]*<\/script>)`, 'g');
+                content = content.replace(regex, (_, m1, _m2, m3) => {
+                    return `${m1}\${"this.$t(${module}.${key})"}${m3}`
+                });
+            }
         }
 
         fs.writeFileSync(filePath, content);
