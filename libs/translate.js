@@ -25,14 +25,15 @@ async function _translate(word, apikey) {
 
 // 翻译
 async function translate(words = [], apikey) {
-    const MAX_TOKENS = 2000;
+    const MAX_TOKENS = 5000;
+    const MAX_LENGTH = 50;
     let wordsQueue = [], translatedQueue = [];
 
     const translateFn = (word) => _translate(word, apikey)
 
     try {
         for (let word of words) {
-            if (wordsQueue.join("").length < MAX_TOKENS) {
+            if (wordsQueue.length < MAX_LENGTH && wordsQueue.join("").length < MAX_TOKENS) {
                 wordsQueue.push(word)
             } else {
                 const translated = await translateFn(wordsQueue)
