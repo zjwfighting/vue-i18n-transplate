@@ -5,9 +5,10 @@
   "main": "index.js",
   "homepage": "https://github.com/zjwfighting/vue-i18n-transplate",
   "dependencies": {
-    "@babel/parser": "^7.26.3",
-    "@babel/traverse": "^7.26.4",
+    "@babel/parser": "^7.28.0",
+    "@babel/traverse": "^7.28.0",
     "@vue/compiler-core": "^3.5.13",
+    "@vue/compiler-sfc": "^3.5.18",
     "mocha": "^11.0.1",
     "node-fetch": "^2.7.0"
   },
