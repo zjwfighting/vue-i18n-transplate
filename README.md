@@ -27,10 +27,7 @@
 *   **✅ 高度可配置**: 支持自定义 i18n 路径前缀、输出文件路径等，以适应不同项目的规范。
 
 ## 工作流程
-
-![Workflow Diagram](https://user-images.githubusercontent.com/13174245/158021389-72c67b3e-e14f-4a31-b8f4-656b2cfd2948.png)
-*(这是一个示意图，你可以根据实际情况创建并替换)*
-
+![alt text](https://youke1.picui.cn/s1/2025/09/01/68b56caf2c2a9.png)
 1.  **扫描文件**: 工具遍历你指定的目录（如 `src`）。
 2.  **提取中文**: 从文件内容中匹配并抽离出所有中文字符串。
 3.  **生成 Key**: 为每个独特的中文字符串生成一个唯一的、语义化的 key（通常基于拼音）。
@@ -48,11 +45,11 @@ yarn add vue-i18n-translate
 
 ## 使用方法
 
-推荐在你的项目根目录下创建一个脚本文件来执行此工具，例如 `scripts/translate.js`。
+推荐在你的项目根目录下创建一个脚本文件来执行此工具，例如 `scripts/process.js`。
 
 **1. 创建脚本文件**
 
-在你的项目根目录创建 `scripts/translate.js` 文件：
+在你的项目根目录创建 `scripts/process.js` 文件：
 
 ```javascript
 // scripts/translate.js
@@ -69,17 +66,12 @@ const options = {
   // 建议使用环境变量来保护你的 key: process.env.NIUTRANS_API_KEY
   apikey: "你的小牛翻译API_KEY",
 
+  output
+
   // [可选] 模块名称，将作为生成的文件名和 i18n key 的第一级路径
   // 默认为 'module'
   // 例如，设置为 'user'，则 key 为 'user.some_text'，生成文件为 'user.js'
   module: 'common',
-
-  // [可选] 生成的语言包文件存放目录
-  // 默认为 './locales'
-  outputDir: './src/locales',
-  
-  // [可选] 目标翻译语言，默认为英文 'en'
-  targetLang: 'en',
 };
 
 // 3. 开始执行
@@ -167,13 +159,12 @@ export default {
 </script>
 ```
 
-**同时，会在 `./src/locales` 目录下生成 `hello.js` 文件:**
+**同时，会在 `/` 目录下生成 `hello.js` 文件:**
 
 ```javascript
-// src/locales/hello.js
 export default {
   zh: {
-    'ni_hao_shi_jie': '你好，世界！',
+    'HelloWord': '你好，世界！',
     'zhe_shi_yi_ge_guo_ji_hua_shi_li_xiang_mu': '这是一个国际化示例项目。',
     'gai_bian_xiao_xi': '改变消息',
     'cao_zuo_cheng_gong': '操作成功'
@@ -186,48 +177,6 @@ export default {
   }
 };
 ```
-
-## 与项目集成
-
-你需要将生成的语言包整合到你的 `vue-i18n` 实例中。
-
-例如，在你的 `main.js` 或专门的 i18n 配置文件中：
-
-```javascript
-import Vue from 'vue'
-import VueI18n from 'vue-i18n'
-
-// 引入生成的语言包
-import commonMessages from './locales/common'
-import helloMessages from './locales/hello'
-
-Vue.use(VueI18n)
-
-// 合并所有语言包
-const messages = {
-  zh: {
-    ...commonMessages.zh,
-    ...helloMessages.zh,
-    // ...其他模块
-  },
-  en: {
-    ...commonMessages.en,
-    ...helloMessages.en,
-    // ...其他模块
-  }
-}
-
-const i18n = new VueI18n({
-  locale: 'zh', // 设置地区
-  messages, // 设置地区信息
-})
-
-new Vue({
-  i18n,
-  render: h => h(App)
-}).$mount('#app')
-```
-
 ## 注意事项
 
 *   **代码备份**: 在执行此脚本前，强烈建议你使用 Git 等版本控制工具提交当前的代码，以防意外发生。
